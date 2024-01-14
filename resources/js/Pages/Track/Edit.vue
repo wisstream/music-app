@@ -1,7 +1,7 @@
 <template>
     <MusicLayout>
         <template #title>
-            Créer un nouveau titre
+            Edit track {{ track.title }}
         </template>
         <template #action>
             
@@ -100,14 +100,15 @@
    import MusicLayout from '@/Layouts/MusicLayout.vue'
    export default {
        components: { MusicLayout },
+       props: {
+           track: Object,
+       },
        data() {
            return {
                form: this.$inertia.form({
-                  title: '',
-                  artist: '',
-                  image: null,
-                  music: null,
-                  display: true,
+                  title: this.track.title,
+                  artist: this.track.artist,
+                  display: this.track.display ? true : false,
                })
            }
        },
@@ -116,8 +117,8 @@
                this.form[fieldName] = event.target.files[0];
            },
            submit() {
-                this.form.post(route('tracks.store'), {
-                    onSuccess: () => this.$inertia.visit(route('track.index')),
+                this.form.put(route('tracks.update'), {
+                    track: this.track,
                 });
            }
        }
